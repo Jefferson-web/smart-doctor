@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace SmartDoctor.Models
 {
-    public partial class Medico
+    public partial class Medico: Persona
     {
         [Key]
         public int medicoId { get; set; }
-        public string nombres { get; set; }
-        public string apellidos { get; set; }
         public int especialidadId { get; set; }
         public int residenciaId { get; set; }
         public string CMP { get; set; }

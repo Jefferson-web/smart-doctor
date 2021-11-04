@@ -1,4 +1,5 @@
-﻿using SmartDoctor.DataAccess;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartDoctor.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +9,47 @@ namespace SmartDoctor.Models
 {
     public partial class PacienteSOA
     {
-        public void Editar(Paciente paciente) {
+
+        public static Paciente AdicionarPaciente(Paciente paciente) {
             DataContext ctx = new DataContext();
-            Paciente p = ctx.Pacientes.Find(paciente.pacienteId);
-            p.nombres = paciente.nombres;
-            p.apellidos = paciente.apellidos;
-            p.DNI = paciente.DNI;
-            p.edad = paciente.edad;
-            p.sexo = paciente.sexo;
-            ctx.Pacientes.Update(p);
+            paciente.fecha_registro = DateTime.Now;
+            ctx.Pacientes.Add(paciente);
+            ctx.SaveChanges();
+            return paciente;
+        }
+
+        public static IEnumerable<Paciente> ListarPacientes() {
+            DataContext ctx = new DataContext();
+            var pacientes = ctx.Pacientes
+                .Include(p => p.Parentesco)    
+                .ToList();
+            return pacientes;
+        }
+
+        public static void Desafiliar(Paciente paciente) {
+            DataContext ctx = new DataContext();
+            ctx.Pacientes.Remove(paciente);
             ctx.SaveChanges();
         }
 
-        public bool Existe(int pacienteId) {
+        public static Paciente Editar(Paciente paciente) {
             DataContext ctx = new DataContext();
-            return ctx.Pacientes.Any(p => p.pacienteId == pacienteId);
+            Paciente p = GetPacienteById(paciente.pacienteId);
+            p.nombres = paciente.nombres;
+            p.apellidos = paciente.apellidos;
+            p.DNI = paciente.DNI;
+            p.fecha_nacimiento = paciente.fecha_nacimiento;
+            p.edad = paciente.edad;
+            p.sexo = paciente.sexo;
+            p.distrito_colonia = paciente.distrito_colonia;
+            ctx.Pacientes.Update(p);
+            ctx.SaveChanges();
+            return p;
+        }
+
+        public static Paciente GetPacienteById(int pacienteId) {
+            DataContext ctx = new DataContext();
+            return ctx.Pacientes.Find(pacienteId);
         }
 
     }

@@ -10,8 +10,8 @@ using SmartDoctor.DataAccess;
 namespace SmartDoctor.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211028040223_PrimeraMigracion")]
-    partial class PrimeraMigracion
+    [Migration("20211104012732_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -184,6 +184,9 @@ namespace SmartDoctor.Migrations
                     b.Property<string>("apellidos")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("distrito_colonia")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("edad")
                         .HasColumnType("int");
 
@@ -196,12 +199,30 @@ namespace SmartDoctor.Migrations
                     b.Property<string>("nombres")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("parentescoId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("sexo")
                         .HasColumnType("bit");
 
                     b.HasKey("pacienteId");
 
                     b.ToTable("Pacientes");
+                });
+
+            modelBuilder.Entity("SmartDoctor.Models.Parentesco", b =>
+                {
+                    b.Property<int>("parentescoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("parentesco")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("parentescoId");
+
+                    b.ToTable("Parentescos");
                 });
 
             modelBuilder.Entity("SmartDoctor.Models.Residencia", b =>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartDoctor.Migrations
 {
-    public partial class PrimeraMigracion : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,17 +27,32 @@ namespace SmartDoctor.Migrations
                 {
                     pacienteId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    nombres = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    parentescoId = table.Column<int>(type: "int", nullable: false),
                     DNI = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    edad = table.Column<int>(type: "int", nullable: false),
-                    fecha_registro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     fecha_nacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    sexo = table.Column<bool>(type: "bit", nullable: false)
+                    edad = table.Column<int>(type: "int", nullable: false),
+                    sexo = table.Column<bool>(type: "bit", nullable: false),
+                    fecha_registro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    distrito_colonia = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    nombres = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pacientes", x => x.pacienteId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Parentescos",
+                columns: table => new
+                {
+                    parentescoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    parentesco = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Parentescos", x => x.parentescoId);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,8 +74,6 @@ namespace SmartDoctor.Migrations
                 {
                     medicoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    nombres = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     especialidadId = table.Column<int>(type: "int", nullable: false),
                     residenciaId = table.Column<int>(type: "int", nullable: false),
                     CMP = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -68,7 +81,9 @@ namespace SmartDoctor.Migrations
                     RNE = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     celular = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     correo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    edad = table.Column<int>(type: "int", nullable: false)
+                    edad = table.Column<int>(type: "int", nullable: false),
+                    nombres = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -202,6 +217,9 @@ namespace SmartDoctor.Migrations
 
             migrationBuilder.DropTable(
                 name: "Experiencias");
+
+            migrationBuilder.DropTable(
+                name: "Parentescos");
 
             migrationBuilder.DropTable(
                 name: "Pacientes");

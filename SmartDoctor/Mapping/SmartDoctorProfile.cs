@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace SmartDoctor.Mapping
 {
-    public class MedicoProfile: Profile
+    public class SmartDoctorProfile: Profile
     {
-        public MedicoProfile()
+        public SmartDoctorProfile()
         {
             CreateMap<MedicoDTO, Medico>().ReverseMap();
+            CreateMap<PacienteDTO, Paciente>().ReverseMap();
+            CreateMap<EditarPacienteDTO, Paciente>().ReverseMap();
         }
     }
 }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SmartDoctor.DTOs
 {
-    public class PacienteDTO
+    public class EditarPacienteDTO
     {
         [Required]
-        public int parentescoId { get; set; }
+        public int pacienteId { get; set; }
         [Required]
         public string nombres { get; set; }
         [Required]
