@@ -10,7 +10,7 @@ using SmartDoctor.DataAccess;
 namespace SmartDoctor.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211104012732_Initial")]
+    [Migration("20211106200107_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -135,12 +135,6 @@ namespace SmartDoctor.Migrations
                     b.Property<string>("CMP")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RNE")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("apellidos")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("celular")
                         .HasColumnType("nvarchar(max)");
 
@@ -149,9 +143,6 @@ namespace SmartDoctor.Migrations
 
                     b.Property<string>("descripcion")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("edad")
-                        .HasColumnType("int");
 
                     b.Property<int>("especialidadId")
                         .HasColumnType("int");
@@ -162,11 +153,16 @@ namespace SmartDoctor.Migrations
                     b.Property<int>("residenciaId")
                         .HasColumnType("int");
 
+                    b.Property<int>("sistemaOperativoId")
+                        .HasColumnType("int");
+
                     b.HasKey("medicoId");
 
                     b.HasIndex("especialidadId");
 
                     b.HasIndex("residenciaId");
+
+                    b.HasIndex("sistemaOperativoId");
 
                     b.ToTable("Medicos");
                 });
@@ -207,6 +203,8 @@ namespace SmartDoctor.Migrations
 
                     b.HasKey("pacienteId");
 
+                    b.HasIndex("parentescoId");
+
                     b.ToTable("Pacientes");
                 });
 
@@ -232,13 +230,28 @@ namespace SmartDoctor.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("nombre")
+                    b.Property<string>("pais")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("residenciaId");
 
-                    b.ToTable("Residencia");
+                    b.ToTable("Residencias");
+                });
+
+            modelBuilder.Entity("SmartDoctor.Models.SistemaOperativo", b =>
+                {
+                    b.Property<int>("sistemaOperativoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("sistemaOperativoId");
+
+                    b.ToTable("SistemaOperativos");
                 });
 
             modelBuilder.Entity("SmartDoctor.Models.Calificacion", b =>
@@ -292,9 +305,28 @@ namespace SmartDoctor.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SmartDoctor.Models.SistemaOperativo", "SistemaOperativo")
+                        .WithMany()
+                        .HasForeignKey("sistemaOperativoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Especialidad");
 
                     b.Navigation("Residencia");
+
+                    b.Navigation("SistemaOperativo");
+                });
+
+            modelBuilder.Entity("SmartDoctor.Models.Paciente", b =>
+                {
+                    b.HasOne("SmartDoctor.Models.Parentesco", "Parentesco")
+                        .WithMany()
+                        .HasForeignKey("parentescoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Parentesco");
                 });
 
             modelBuilder.Entity("SmartDoctor.Models.Medico", b =>

@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace SmartDoctor.Models
 {
-    public class Residencia
+    public class SistemaOperativo
     {
         [Key]
-        public int residenciaId { get; set; }
-        [Required]
-        public string pais { get; set; }
+        public int sistemaOperativoId { get; set; }
+        public string nombre { get; set; }
     }
 }

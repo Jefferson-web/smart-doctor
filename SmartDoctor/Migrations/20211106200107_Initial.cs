@@ -22,6 +22,45 @@ namespace SmartDoctor.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Parentescos",
+                columns: table => new
+                {
+                    parentescoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    parentesco = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Parentescos", x => x.parentescoId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Residencias",
+                columns: table => new
+                {
+                    residenciaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    pais = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Residencias", x => x.residenciaId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SistemaOperativos",
+                columns: table => new
+                {
+                    sistemaOperativoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    nombre = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SistemaOperativos", x => x.sistemaOperativoId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Pacientes",
                 columns: table => new
                 {
@@ -40,32 +79,12 @@ namespace SmartDoctor.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pacientes", x => x.pacienteId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Parentescos",
-                columns: table => new
-                {
-                    parentescoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    parentesco = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Parentescos", x => x.parentescoId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Residencia",
-                columns: table => new
-                {
-                    residenciaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    nombre = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Residencia", x => x.residenciaId);
+                    table.ForeignKey(
+                        name: "FK_Pacientes_Parentescos_parentescoId",
+                        column: x => x.parentescoId,
+                        principalTable: "Parentescos",
+                        principalColumn: "parentescoId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,14 +95,12 @@ namespace SmartDoctor.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     especialidadId = table.Column<int>(type: "int", nullable: false),
                     residenciaId = table.Column<int>(type: "int", nullable: false),
+                    sistemaOperativoId = table.Column<int>(type: "int", nullable: false),
+                    nombres = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CMP = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RNE = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     celular = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     correo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    edad = table.Column<int>(type: "int", nullable: false),
-                    nombres = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    apellidos = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -95,10 +112,16 @@ namespace SmartDoctor.Migrations
                         principalColumn: "especialidadId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Medicos_Residencia_residenciaId",
+                        name: "FK_Medicos_Residencias_residenciaId",
                         column: x => x.residenciaId,
-                        principalTable: "Residencia",
+                        principalTable: "Residencias",
                         principalColumn: "residenciaId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Medicos_SistemaOperativos_sistemaOperativoId",
+                        column: x => x.sistemaOperativoId,
+                        principalTable: "SistemaOperativos",
+                        principalColumn: "sistemaOperativoId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -205,6 +228,16 @@ namespace SmartDoctor.Migrations
                 name: "IX_Medicos_residenciaId",
                 table: "Medicos",
                 column: "residenciaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Medicos_sistemaOperativoId",
+                table: "Medicos",
+                column: "sistemaOperativoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pacientes_parentescoId",
+                table: "Pacientes",
+                column: "parentescoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -219,19 +252,22 @@ namespace SmartDoctor.Migrations
                 name: "Experiencias");
 
             migrationBuilder.DropTable(
-                name: "Parentescos");
-
-            migrationBuilder.DropTable(
                 name: "Pacientes");
 
             migrationBuilder.DropTable(
                 name: "Medicos");
 
             migrationBuilder.DropTable(
+                name: "Parentescos");
+
+            migrationBuilder.DropTable(
                 name: "Especialidades");
 
             migrationBuilder.DropTable(
-                name: "Residencia");
+                name: "Residencias");
+
+            migrationBuilder.DropTable(
+                name: "SistemaOperativos");
         }
     }
 }

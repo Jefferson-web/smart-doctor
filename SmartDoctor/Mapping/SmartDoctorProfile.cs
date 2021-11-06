@@ -15,6 +15,7 @@ namespace SmartDoctor.Mapping
             CreateMap<MedicoDTO, Medico>().ReverseMap();
             CreateMap<PacienteDTO, Paciente>().ReverseMap();
             CreateMap<EditarPacienteDTO, Paciente>().ReverseMap();
+            CreateMap<EditarMedicoDTO, Medico>().ReverseMap();
         }
     }
 }

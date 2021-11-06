@@ -9,15 +9,32 @@ namespace SmartDoctor.Models
 {
     public partial class MedicosSOA
     {
-        public IEnumerable<Medico> ListarMedicos() {
+
+        public Medico Registrar(Medico medico)
+        {
             DataContext ctx = new DataContext();
-            IEnumerable<Medico> medicos = ctx.Medicos
-                .Include(m => m.Especialidad)
-                .ToList();
-            return medicos;
+            ctx.Medicos.Add(medico);
+            ctx.SaveChanges();
+            return medico;
         }
 
-        public Medico VerPerfil(int medicoId) {
+        public void Editar(Medico medico) {
+            DataContext ctx = new DataContext();
+            var medicoAEditar = ctx.Medicos.Find(medico.medicoId);
+            if (medicoAEditar != null)
+            {
+                medicoAEditar.nombres = medico.nombres;
+                medicoAEditar.CMP = medico.CMP;
+                medicoAEditar.celular = medico.celular;
+                medicoAEditar.correo = medico.correo;
+                medicoAEditar.descripcion = medico.descripcion;
+                ctx.Medicos.Update(medicoAEditar);
+                ctx.SaveChanges();
+            }
+        }
+
+        public Medico VerPerfil(int medicoId)
+        {
             DataContext ctx = new DataContext();
             var medico = ctx.Medicos
                     .Include(m => m.Experiencias)
@@ -27,11 +44,13 @@ namespace SmartDoctor.Models
             return medico;
         }
 
-        public Medico Registrar(Medico medico) {
+        public IEnumerable<Medico> ListarMedicos() {
             DataContext ctx = new DataContext();
-            ctx.Medicos.Add(medico);
-            ctx.SaveChanges();
-            return medico;
+            IEnumerable<Medico> medicos = ctx.Medicos
+                .Include(m => m.Especialidad)
+                .Include(m => m.Residencia)
+                .ToList();
+            return medicos;
         }
 
     }

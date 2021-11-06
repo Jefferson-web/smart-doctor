@@ -18,6 +18,8 @@ namespace SmartDoctor.DataAccess
         public DbSet<Estudio> Estudios { get; set; }
         public DbSet<Calificacion> Calificaciones { get; set; }
         public DbSet<Parentesco> Parentescos { get; set; }
+        public DbSet<Residencia> Residencias { get; set; }
+        public DbSet<SistemaOperativo> SistemaOperativos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

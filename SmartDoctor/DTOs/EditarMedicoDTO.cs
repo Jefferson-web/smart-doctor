@@ -6,21 +6,18 @@ using System.Threading.Tasks;
 
 namespace SmartDoctor.DTOs
 {
-    public class MedicoDTO
+    public class EditarMedicoDTO
     {
+        [Required]
+        public int medicoId { get; set; }
         [Required]
         public string nombres { get; set; }
         [Required]
-        public int residenciaId { get; set; }
-        [Required]
-        public int especialidadId { get; set; }
-        [Required]
-        public int sistemaOperativoId { get; set; }
-        [Required]
         public string CMP { get; set; }
-        [StringLength(9)]
+        [Required]
         public string celular { get; set; }
         [Required]
         public string correo { get; set; }
+        public string descripcion { get; set; }
     }
 }

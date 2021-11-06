@@ -33,6 +33,14 @@ namespace SmartDoctor
             services.AddScoped<MedicosSOA>();
             services.AddControllers();
             services.AddAutoMapper(typeof(Startup));
+            services.AddCors(x =>
+            {
+                x.AddPolicy("Policy", policy =>
+                {
+                    policy.AllowCredentials().AllowAnyHeader().AllowAnyMethod();
+                    policy.WithOrigins("http://localhost:4200");
+                });
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SmartDoctor", Version = "v1" });
@@ -52,6 +60,8 @@ namespace SmartDoctor
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("Policy");
 
             app.UseAuthorization();
 

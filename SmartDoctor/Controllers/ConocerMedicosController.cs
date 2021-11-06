@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using SmartDoctor.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmartDoctor.Models;
 using System;
 using System.Collections.Generic;
@@ -13,25 +11,17 @@ namespace SmartDoctor.Controllers
     [Route("api/[controller]")]
     public class ConocerMedicosController : ControllerBase
     {
-        private readonly IMapper mapper;
-        public ConocerMedicosController(IMapper mapper)
-        {
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        }
 
-        [Route("[action]")]
-        [HttpPost]
-        public ActionResult<Medico> Registrar([FromBody] MedicoDTO medicoDto) {
-            if (!ModelState.IsValid) return BadRequest();
-            Medico medico = mapper.Map<Medico>(medicoDto);
-            MedicosSOA soa = new MedicosSOA();
-            soa.Registrar(medico);
-            return medico;
+        [HttpGet("ListarEspecialidades")]
+        public IEnumerable<Especialidad> ListarEspecialidades() {
+            var especialidades = EspecialidadSOA.Listar();
+            return especialidades;
         }
 
         [Route("[action]")]
         [HttpGet]
-        public IEnumerable<Medico> ListarMedicos(string q, int especialidadId = 0) {
+        public IEnumerable<Medico> ListarMedicos(string q, int especialidadId = 0)
+        {
             MedicosSOA soa = new MedicosSOA();
             var medicos = soa.ListarMedicos();
             if (especialidadId != 0)
@@ -40,28 +30,30 @@ namespace SmartDoctor.Controllers
             }
             if (!String.IsNullOrEmpty(q))
             {
-                medicos = medicos.Where(medico => medico.nombres.Contains(q)
-                || medico.apellidos.Contains(q));
+                medicos = medicos.Where(medico => medico.nombres.Contains(q));
             }
             return medicos;
         }
 
         [Route("[action]/{medicoId:int}")]
         [HttpGet]
-        public ActionResult<Medico> VerPerfil(int medicoId) {
+        public ActionResult<Medico> VerPerfil(int medicoId)
+        {
             if (String.IsNullOrEmpty(medicoId.ToString())) return BadRequest();
             MedicosSOA soa = new MedicosSOA();
             var medico = soa.VerPerfil(medicoId);
-            if (medico is null)
+            if (medico == null)
             {
-                return NotFound();    
+                return NotFound();
             }
             return medico;
         }
 
+
         [Route("[action]")]
         [HttpPost]
-        public ActionResult<Calificacion> Calificar([FromBody] Calificacion calificacion) {
+        public ActionResult<Calificacion> Calificar([FromBody] Calificacion calificacion)
+        {
             if (!ModelState.IsValid) return BadRequest();
             CalificacionSOA soa = new CalificacionSOA();
             var resultado = soa.Calificar(calificacion);
@@ -70,12 +62,15 @@ namespace SmartDoctor.Controllers
 
         [Route("[action]/{medicoId:int}")]
         [HttpGet]
-        public ActionResult<IEnumerable<Calificacion>> ListarComentarios(int medicoId) {
+        public ActionResult<IEnumerable<Calificacion>> Reputacion(int medicoId)
+        {
             if (String.IsNullOrEmpty(medicoId.ToString())) return BadRequest();
             CalificacionSOA soa = new CalificacionSOA();
             var comentarios = soa.ListarComentarios(medicoId);
             return Ok(comentarios);
         }
 
+
     }
+
 }
