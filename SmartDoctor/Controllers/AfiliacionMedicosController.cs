@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using SmartDoctor.DataAccess;
 using SmartDoctor.DTOs;
 using SmartDoctor.Models;
 using System;
@@ -43,6 +44,22 @@ namespace SmartDoctor.Controllers
             MedicosSOA soa = new MedicosSOA();
             soa.Editar(medico);
             return medico;
+        }
+
+        [HttpPost("AgregarConsultorio")]
+        public ActionResult<Consulta> AgregarConsultorio(int medicoId, double importe, int duracion) {
+            DataContext ctx = new DataContext();
+            var medico = ctx.Medicos.Find(medicoId);
+            if (medico == null)
+                return NotFound();
+            Consulta consulta = new Consulta();
+            consulta.medicoId = medicoId;
+            consulta.importe = importe;
+            consulta.duracion = duracion;
+            consulta.fecha_registro = DateTime.Now;
+            ctx.Consultas.Add(consulta);
+            ctx.SaveChanges();
+            return consulta;
         }
 
     }

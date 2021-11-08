@@ -20,11 +20,6 @@ namespace SmartDoctor.DataAccess
                 context.Residencias.AddRange(getResidencias());
                 await context.SaveChangesAsync();
             }
-            if (!context.Parentescos.Any())
-            {
-                context.Parentescos.AddRange(getParentescos());
-                await context.SaveChangesAsync();
-            }
             if (!context.SistemaOperativos.Any())
             {
                 context.SistemaOperativos.AddRange(GetSistemaOperativos());
@@ -37,17 +32,6 @@ namespace SmartDoctor.DataAccess
             {
                 new SistemaOperativo(){ nombre = "Android" },
                 new SistemaOperativo() { nombre = "IOs" }
-            };
-        }
-
-        public static IEnumerable<Parentesco> getParentescos() {
-            return new List<Parentesco>() { 
-                new Parentesco() { parentesco = "Hijo (a)" },
-                new Parentesco() { parentesco = "Padre" },
-                new Parentesco() { parentesco = "Madre" },
-                new Parentesco() { parentesco = "Esposo (a)" },
-                new Parentesco() { parentesco = "Hermano (a)" },
-                new Parentesco() { parentesco = "Otro" }
             };
         }
 

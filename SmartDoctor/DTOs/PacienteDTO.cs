@@ -9,8 +9,6 @@ namespace SmartDoctor.DTOs
     public class PacienteDTO
     {
         [Required]
-        public int parentescoId { get; set; }
-        [Required]
         public string nombres { get; set; }
         [Required]
         public string apellidos { get; set; }

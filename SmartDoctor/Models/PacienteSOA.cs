@@ -20,8 +20,7 @@ namespace SmartDoctor.Models
 
         public static IEnumerable<Paciente> ListarPacientes() {
             DataContext ctx = new DataContext();
-            var pacientes = ctx.Pacientes
-                .Include(p => p.Parentesco)    
+            var pacientes = ctx.Pacientes   
                 .ToList();
             return pacientes;
         }
