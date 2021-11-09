@@ -22,8 +22,7 @@ namespace SmartDoctor.Models
         public DateTime fecha_registro { get; set; }
         [Required]
         public string motivo { get; set; }
-        public Consulta Consulta { get; set; }
-        public Paciente Paciente { get; set; }
+        public double costo { get; set; }
         public IEnumerable<Archivo> Archivos { get; set; }
     }
 }

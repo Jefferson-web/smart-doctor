@@ -22,6 +22,7 @@ namespace SmartDoctor.DataAccess
         public DbSet<Consulta> Consultas { get; set; }
         public DbSet<Horario> Horarios { get; set; }
         public DbSet<Cita> Citas { get; set; }
+        public DbSet<Pago> Pagos { get; set; }
         public DbSet<Archivo> Archivos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

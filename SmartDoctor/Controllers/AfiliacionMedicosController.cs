@@ -14,35 +14,48 @@ namespace SmartDoctor.Controllers
     [Route("api/[controller]")]
     public class AfiliacionMedicosController : ControllerBase
     {
-        private readonly IMapper mapper;
-        public AfiliacionMedicosController(IMapper mapper)
-        {
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        }
+        public AfiliacionMedicosController(){}
 
         [Route("[action]")]
         [HttpPost]
-        public ActionResult<Medico> Registrar([FromBody] MedicoDTO medicoDto) {
-            if (!ModelState.IsValid) return BadRequest();
-            Medico medico = mapper.Map<Medico>(medicoDto);
-            MedicosSOA soa = new MedicosSOA();
-            soa.Registrar(medico);
+        public ActionResult<Medico> Registrar(int especialidadId, int residenciaId, int sistemaOperativoId, string nombres, string CMP, string celular, string correo) {
+            DataContext ctx = new DataContext();
+            Medico medico = new Medico();
+            medico.especialidadId = especialidadId;
+            medico.residenciaId = residenciaId;
+            medico.sistemaOperativoId = sistemaOperativoId;
+            medico.nombres = nombres;
+            medico.CMP = CMP;
+            medico.celular = celular;
+            medico.correo = correo;
+            ctx.Medicos.Add(medico);
+            ctx.SaveChanges();
             return medico;
         }
 
         [HttpGet("ListarResidencias")]
         public IEnumerable<Residencia> ListarResidencias() {
-            var residencias = ResidenciaSOA.Listar();
+            DataContext ctx = new DataContext();
+            var residencias = ctx.Residencias.ToList();
             return residencias;
         }
 
         [Route("[action]")]
         [HttpPut]
-        public ActionResult<Medico> ModificarDatos([FromBody] EditarMedicoDTO medicoDto)
+        public ActionResult<Medico> ModificarDatos(int medicoId, int especialidadId, int residenciaId, string nombres, string CMP, string celular, string correo)
         {
-            Medico medico = mapper.Map<Medico>(medicoDto);
-            MedicosSOA soa = new MedicosSOA();
-            soa.Editar(medico);
+            DataContext ctx = new DataContext();
+            var medico = ctx.Medicos.Find(medicoId);
+            if (medico == null)
+                return NotFound();
+            medico.especialidadId = especialidadId;
+            medico.residenciaId = residenciaId;
+            medico.nombres = nombres;
+            medico.CMP = CMP;
+            medico.celular = celular;
+            medico.correo = correo;
+            ctx.Medicos.Update(medico);
+            ctx.SaveChanges();
             return medico;
         }
 

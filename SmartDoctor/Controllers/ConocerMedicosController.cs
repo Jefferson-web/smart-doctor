@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SmartDoctor.DataAccess;
 using SmartDoctor.Models;
 using System;
 using System.Collections.Generic;
@@ -14,7 +16,8 @@ namespace SmartDoctor.Controllers
 
         [HttpGet("ListarEspecialidades")]
         public IEnumerable<Especialidad> ListarEspecialidades() {
-            var especialidades = EspecialidadSOA.Listar();
+            DataContext ctx = new DataContext();
+            IEnumerable<Especialidad> especialidades = ctx.Especialidades.ToList();
             return especialidades;
         }
 
@@ -22,8 +25,8 @@ namespace SmartDoctor.Controllers
         [HttpGet]
         public IEnumerable<Medico> ListarMedicos(string q, int especialidadId = 0)
         {
-            MedicosSOA soa = new MedicosSOA();
-            var medicos = soa.ListarMedicos();
+            DataContext ctx = new DataContext();
+            IEnumerable<Medico> medicos = ctx.Medicos.ToList();
             if (especialidadId != 0)
             {
                 medicos = medicos.Where(medico => medico.especialidadId == especialidadId).ToList();
@@ -39,16 +42,18 @@ namespace SmartDoctor.Controllers
         [HttpGet]
         public ActionResult<Medico> VerPerfil(int medicoId)
         {
-            if (String.IsNullOrEmpty(medicoId.ToString())) return BadRequest();
-            MedicosSOA soa = new MedicosSOA();
-            var medico = soa.VerPerfil(medicoId);
+            DataContext ctx = new DataContext();
+            var medico =  ctx.Medicos
+                .Include(m => m.Experiencias)
+                .Include(m => m.Estudios)
+                .Include(m => m.Residencia)
+                .FirstOrDefault(medico => medico.medicoId == medicoId);
             if (medico == null)
             {
                 return NotFound();
             }
             return medico;
         }
-
 
         [Route("[action]")]
         [HttpPost]

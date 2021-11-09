@@ -43,7 +43,7 @@ namespace SmartDoctor.Controllers
             var horariosDisponibles =  ctx.Horarios.Where(h => 
                 h.consultaId == consultaId && 
                 h.fecha_atencion == fecha &&
-                h.disponible != false)
+                h.disponible)
                 .OrderBy(h => h.inicio_atencion)
                 .ToList();
             return Ok(horariosDisponibles);
@@ -72,6 +72,7 @@ namespace SmartDoctor.Controllers
             cita.fin_cita = inicio_cita.AddMinutes(consulta.duracion);
             cita.motivo = motivo;
             cita.fecha_registro = DateTime.Now;
+            cita.costo = consulta.importe;
             ctx.Citas.Add(cita);
             ctx.SaveChanges();
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartDoctor.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,6 +65,27 @@ namespace SmartDoctor.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SistemaOperativos", x => x.sistemaOperativoId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pagos",
+                columns: table => new
+                {
+                    pagoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    pacienteId = table.Column<int>(type: "int", nullable: false),
+                    monto = table.Column<double>(type: "float", nullable: false),
+                    fecha_pago = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pagos", x => x.pagoId);
+                    table.ForeignKey(
+                        name: "FK_Pagos_Pacientes_pacienteId",
+                        column: x => x.pacienteId,
+                        principalTable: "Pacientes",
+                        principalColumn: "pacienteId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -212,7 +233,8 @@ namespace SmartDoctor.Migrations
                     inicio_cita = table.Column<DateTime>(type: "datetime2", nullable: false),
                     fin_cita = table.Column<DateTime>(type: "datetime2", nullable: false),
                     fecha_registro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    motivo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    motivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    costo = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -338,6 +360,11 @@ namespace SmartDoctor.Migrations
                 name: "IX_Medicos_sistemaOperativoId",
                 table: "Medicos",
                 column: "sistemaOperativoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pagos_pacienteId",
+                table: "Pagos",
+                column: "pacienteId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -356,6 +383,9 @@ namespace SmartDoctor.Migrations
 
             migrationBuilder.DropTable(
                 name: "Horarios");
+
+            migrationBuilder.DropTable(
+                name: "Pagos");
 
             migrationBuilder.DropTable(
                 name: "Citas");

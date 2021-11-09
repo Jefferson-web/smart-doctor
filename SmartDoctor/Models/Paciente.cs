@@ -16,5 +16,7 @@ namespace SmartDoctor.Models
         public bool sexo { get; set; }
         public DateTime fecha_registro { get; set; }
         public string distrito_colonia { get; set; }
+        public IEnumerable<Cita> Citas { get; set; }
+        public IEnumerable<Pago> Pagos { get; set; }
     }
 }

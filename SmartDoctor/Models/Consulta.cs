@@ -18,6 +18,7 @@ namespace SmartDoctor.Models
         public int duracion { get; set; }
         public DateTime fecha_registro { get; set; }
         public Medico Medico { get; set; }
-        public virtual IEnumerable<Horario> Horarios { get; set; }
+        public IEnumerable<Horario> Horarios { get; set; }
+        public IEnumerable<Cita> Citas { get; set; }
     }
 }

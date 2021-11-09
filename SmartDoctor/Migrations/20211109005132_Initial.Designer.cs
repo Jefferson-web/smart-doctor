@@ -10,8 +10,8 @@ using SmartDoctor.DataAccess;
 namespace SmartDoctor.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211107222538_initial")]
-    partial class initial
+    [Migration("20211109005132_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,9 @@ namespace SmartDoctor.Migrations
 
                     b.Property<int>("consultaId")
                         .HasColumnType("int");
+
+                    b.Property<double>("costo")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("fecha_registro")
                         .HasColumnType("datetime2");
@@ -333,6 +336,29 @@ namespace SmartDoctor.Migrations
                     b.ToTable("Pacientes");
                 });
 
+            modelBuilder.Entity("SmartDoctor.Models.Pago", b =>
+                {
+                    b.Property<int>("pagoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("fecha_pago")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("monto")
+                        .HasColumnType("float");
+
+                    b.Property<int>("pacienteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("pagoId");
+
+                    b.HasIndex("pacienteId");
+
+                    b.ToTable("Pagos");
+                });
+
             modelBuilder.Entity("SmartDoctor.Models.Residencia", b =>
                 {
                     b.Property<int>("residenciaId")
@@ -394,21 +420,17 @@ namespace SmartDoctor.Migrations
 
             modelBuilder.Entity("SmartDoctor.Models.Cita", b =>
                 {
-                    b.HasOne("SmartDoctor.Models.Consulta", "Consulta")
-                        .WithMany()
+                    b.HasOne("SmartDoctor.Models.Consulta", null)
+                        .WithMany("Citas")
                         .HasForeignKey("consultaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmartDoctor.Models.Paciente", "Paciente")
-                        .WithMany()
+                    b.HasOne("SmartDoctor.Models.Paciente", null)
+                        .WithMany("Citas")
                         .HasForeignKey("pacienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Consulta");
-
-                    b.Navigation("Paciente");
                 });
 
             modelBuilder.Entity("SmartDoctor.Models.Consulta", b =>
@@ -476,6 +498,15 @@ namespace SmartDoctor.Migrations
                     b.Navigation("SistemaOperativo");
                 });
 
+            modelBuilder.Entity("SmartDoctor.Models.Pago", b =>
+                {
+                    b.HasOne("SmartDoctor.Models.Paciente", null)
+                        .WithMany("Pagos")
+                        .HasForeignKey("pacienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SmartDoctor.Models.Cita", b =>
                 {
                     b.Navigation("Archivos");
@@ -483,6 +514,8 @@ namespace SmartDoctor.Migrations
 
             modelBuilder.Entity("SmartDoctor.Models.Consulta", b =>
                 {
+                    b.Navigation("Citas");
+
                     b.Navigation("Horarios");
                 });
 
@@ -493,6 +526,13 @@ namespace SmartDoctor.Migrations
                     b.Navigation("Estudios");
 
                     b.Navigation("Experiencias");
+                });
+
+            modelBuilder.Entity("SmartDoctor.Models.Paciente", b =>
+                {
+                    b.Navigation("Citas");
+
+                    b.Navigation("Pagos");
                 });
 #pragma warning restore 612, 618
         }
